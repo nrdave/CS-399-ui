@@ -15,7 +15,7 @@ def main():
         m for m in mirror_data if m["country"] in selected_countries]
 
     selected_mirror = st.selectbox(
-        "Select a mirror: ", valid_mirrors, format_func=lambda m: m["url"]
+        "Select a mirror: ", valid_mirrors, format_func=lambda m: m["url"], index=None
     )
 
     if selected_mirror:
