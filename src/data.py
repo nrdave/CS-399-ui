@@ -21,9 +21,12 @@ def get_mirror_info() -> list:
 
         # Filter out mirrors with either a score of Null or completion_pct of
         # zero. These mirrors are likely not valid at the moment
+        # fmt: off
         valid_mirrors = [
-            m for m in mirrors if m["completion_pct"] > 0 and m["score"] is not None
+            m for m in mirrors if m["completion_pct"] > 0
+            and m["score"] is not None
         ]
+        # fmt: on
 
         # Convert completion_pct in the mirror info to an actual percent
         for m in valid_mirrors:
