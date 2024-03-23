@@ -5,6 +5,7 @@ from data import get_mirror_info
 
 def main():
     st.title("Arch Linux Mirrors")
+
     try:
         mirror_data = get_mirror_info()
 
@@ -39,7 +40,7 @@ def main():
             st.bar_chart(data)
 
     except ConnectionError:
-        st.text("Failed to connect to archlinux.org")
+        return
 
 
 if __name__ == "__main__":

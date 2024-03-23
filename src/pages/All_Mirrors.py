@@ -32,7 +32,7 @@ def main():
             use_container_width=True,
         )
     except ConnectionError:
-        st.text("Failed to connect to archlinux.org")
+        return
 
 
 if __name__ == "__main__":

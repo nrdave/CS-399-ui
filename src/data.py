@@ -1,6 +1,6 @@
 import streamlit as st
 from requests import get
-from urllib3.exceptions import NameResolutionError
+from requests.exceptions import RequestException
 
 
 # Arch Linux mirror checks generally run around every 7 minutes
@@ -31,12 +31,8 @@ def get_mirror_info() -> list:
 
         return valid_mirrors
 
-    except (ConnectionError, NameResolutionError) as err:
-        st.error(str(err))
-        raise err
-
-    except OSError as err:
-        st.error(str(err))
-        raise err
+    except (ConnectionError, RequestException):
+        st.error("Failed to connect to archlinux.org")
+        raise ConnectionError
 
     return []
