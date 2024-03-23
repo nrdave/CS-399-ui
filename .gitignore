@@ -1,2 +1,5 @@
 # Python venv
 venv/
+
+# pycaches
+__pycache__/
