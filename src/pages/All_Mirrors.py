@@ -4,15 +4,25 @@ import data
 
 
 def main():
-    st.title("Arch Linux Mirrors")
+    st.title("All Arch Linux Mirrors")
     try:
         mirror_data = data.get_mirror_info()
 
-        fields = st.multiselect(
+        selectable_keys = list(mirror_data[0].keys())
+
+        # URL will always be included in the dataframe, so remove it from the
+        # selectable options
+        selectable_keys.remove("url")
+
+        selected_key = st.multiselect(
             "Select data fields to display: ",
-            list(mirror_data[0].keys()),
-            default=["url", "score"],
+            selectable_keys,
+            default=["score"],
         )
+
+        # Prepend the selected keys list with URL so that the leftmost entry
+        # in the table is the mirror's URL
+        fields = ["url"] + selected_key
 
         st.dataframe(
             [
