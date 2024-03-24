@@ -15,7 +15,7 @@ def main():
         selectable_keys.remove("url")
 
         selected_key = st.multiselect(
-            "Select data fields to display: ",
+            "Select statistics: ",
             selectable_keys,
             default=["score"],
         )

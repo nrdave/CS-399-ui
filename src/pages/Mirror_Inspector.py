@@ -12,6 +12,10 @@ def main():
         selected_countries = st.selectbox(
             "Select Mirror Country: ", list(country_set))
 
+        # If no countries are selected, allow selecting any mirror
+        if not selected_countries:
+            selected_countries = list(country_set)
+
         valid_mirrors = [
             m for m in mirror_data if m["country"] in selected_countries]
 

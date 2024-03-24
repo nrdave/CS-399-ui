@@ -45,7 +45,8 @@ def get_mirror_info() -> list:
         for m in valid_mirrors:
             m["completion_pct"] *= 100
 
-        st.subheader("Data from: " + get_last_update(mirror_status))
+        st.subheader("Mirror check timestamp: " +
+                     get_last_update(mirror_status))
 
         return valid_mirrors
 

@@ -1,5 +1,4 @@
 import streamlit as st
-from requests import get
 from data import get_mirror_info, normalize_times
 
 
@@ -14,6 +13,10 @@ def main():
             "Select Mirror Country/Countries: ", list(country_set)
         )
 
+        # If no countries are selected, allow selecting any mirror
+        if not selected_countries:
+            selected_countries = list(country_set)
+
         valid_mirrors = [
             m for m in mirror_data if m["country"] in selected_countries]
 
@@ -24,8 +27,7 @@ def main():
             and not isinstance(mirror_data[0][k], bool)
         ]
 
-        selected_keys = st.multiselect(
-            "Select data values to compare", valid_keys)
+        selected_keys = st.multiselect("Select statistics", valid_keys)
 
         selected_mirrors = st.multiselect(
             "Select mirrors to compare",
