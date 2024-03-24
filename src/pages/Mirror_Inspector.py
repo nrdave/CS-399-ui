@@ -4,6 +4,7 @@ import data
 
 def main():
     st.title("Inspect Individual Mirror")
+    st.set_page_config(page_title="Arch Linux Mirror Inspector")
 
     try:
         mirror_data = data.get_mirror_info()

@@ -5,6 +5,7 @@ import data
 
 def main():
     st.title("All Arch Linux Mirrors")
+    st.set_page_config(page_title="Arch Linux Mirror Viewer")
     try:
         mirror_data = data.get_mirror_info()
 

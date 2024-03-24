@@ -7,6 +7,8 @@ import altair as alt
 def main():
     st.title("Arch Linux Mirror Comparer")
 
+    st.set_page_config(page_title="Arch Linux Mirror Comparer")
+
     try:
         mirror_data = get_mirror_info()
 
