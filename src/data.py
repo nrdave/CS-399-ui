@@ -5,6 +5,17 @@ from datetime import datetime
 from dateutil import tz
 
 
+def get_last_update(status: dict) -> str:
+    if status["last_check"]:
+        # Time zone conversion taken from
+        # https://github.com/wolfpaulus/weather_ui/blob/main/app/data.py
+        t = datetime.fromisoformat(status["last_check"])
+        t = t.replace(tzinfo=tz.tzutc()).astimezone(tz.tzlocal())
+        return t.strftime("%A, %B %d, %Y, %-I:%M:%S %p %Z")
+
+    return ""
+
+
 # Arch Linux mirror checks generally run around every 7 minutes
 @st.cache_data(show_spinner="Fetching data from archlinux.org", ttl=60 * 7)
 def get_mirror_info() -> list:
@@ -34,6 +45,8 @@ def get_mirror_info() -> list:
         for m in valid_mirrors:
             m["completion_pct"] *= 100
 
+        st.subheader("Last Updated: " + get_last_update(mirror_status))
+
         return valid_mirrors
 
     except (ConnectionError, RequestException):
@@ -41,17 +54,6 @@ def get_mirror_info() -> list:
         raise ConnectionError
 
     return []
-
-
-def get_last_update(status: dict) -> str:
-    if status["last_check"]:
-        # Time zone conversion taken from
-        # https://github.com/wolfpaulus/weather_ui/blob/main/app/data.py
-        t = datetime.fromisoformat(status["last_check"])
-        t = t.replace(tzinfo=tz.tzutc()).astimezone(tz.tzlocal())
-        return t.strftime("%A, %B %d, %Y, %-I:%M:%S %p %Z")
-
-    return ""
 
 
 def normalize_delays(delays: list[float]) -> list[float]:
