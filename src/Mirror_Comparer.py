@@ -63,7 +63,6 @@ def main():
                                 delay_label: normalized_delays,
                             }
                         )
-                        print(data)
 
                         st.caption(
                             (
@@ -77,6 +76,7 @@ def main():
                             )
                         )
 
+                        # fmt: off
                         chart = (
                             alt.Chart(data)
                             .mark_bar()
@@ -84,7 +84,48 @@ def main():
                                 x="Mirror",
                                 y=delay_label,
                                 color=alt.condition(
-                                    alt.datum[delay_label] > max_acceptable_delay,
+                                    alt.datum[delay_label]
+                                    > max_acceptable_delay,
+                                    alt.value("#ff2a00"),
+                                    alt.value("#00a9ff"),
+                                ),
+                            )
+                        )
+                        # fmt: on
+
+                        st.altair_chart(chart, use_container_width=True)
+
+                    case "completion_pct":
+                        data = pd.DataFrame(
+                            {
+                                "Mirror": [m["url"] for m in selected_mirrors],
+                                "Completion Percent": [
+                                    m[key] for m in selected_mirrors
+                                ],
+                            }
+                        )
+
+                        st.caption(
+                            (
+                                '"The number of mirror checks that have '
+                                "successfully connected and disconnected "
+                                "from the given URL. If this is below 100%, "
+                                'the mirror may be unreliable." - '
+                                "archlinux.org. "
+                                "\n\nCompletion Percents below 100% are drawn"
+                                " as red to indicate that the mirror should "
+                                "not be used"
+                            )
+                        )
+
+                        chart = (
+                            alt.Chart(data)
+                            .mark_bar()
+                            .encode(
+                                x="Mirror",
+                                y="Completion Percent",
+                                color=alt.condition(
+                                    alt.datum["Completion Percent"] < 100,
                                     alt.value("#ff2a00"),
                                     alt.value("#00a9ff"),
                                 ),
