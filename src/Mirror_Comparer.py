@@ -1,5 +1,7 @@
 import streamlit as st
 from data import get_mirror_info, normalize_times
+import pandas as pd
+import altair as alt
 
 
 def main():
@@ -38,21 +40,58 @@ def main():
         if selected_mirrors:
             for key in selected_keys:
                 st.subheader(key)
-                if key == "delay":
-                    (normalized_delays, units) = normalize_times(
-                        [m["delay"] for m in selected_mirrors]
-                    )
-                    # fmt: off
-                    data = {
-                        m["url"]: n for m, n in
-                        zip(selected_mirrors, normalized_delays)
-                    }
-                    # fmt: on
-                    st.text("Units: " + units)
-                else:
-                    data = {m["url"]: m[key] for m in selected_mirrors}
+                match key:
+                    case "delay":
+                        (normalized_delays, units) = normalize_times(
+                            [m["delay"] for m in selected_mirrors]
+                        )
 
-                st.bar_chart(data)
+                        match units:
+                            case "hours":
+                                delay_label = "Delay (hours)"
+                                max_acceptable_delay = 1
+                            case "minutes":
+                                delay_label = "Delay (minutes)"
+                                max_acceptable_delay = 60
+                            case _:
+                                delay_label = "Delay (seconds)"
+                                max_acceptable_delay = 60 * 60
+
+                        data = pd.DataFrame(
+                            {
+                                "Mirror": [m["url"] for m in selected_mirrors],
+                                delay_label: normalized_delays,
+                            }
+                        )
+                        print(data)
+
+                        st.caption(
+                            (
+                                "A measure of the average difference between "
+                                "the last sync time and last mirror check "
+                                'for each mirror. "Due to the timing of '
+                                "mirror checks, any value under one hour "
+                                'should be viewed as ideal." - archlinux.org.'
+                                "\n\nDelays over 1 hour are drawn as red to "
+                                "indicate that they should not be used."
+                            )
+                        )
+
+                        chart = (
+                            alt.Chart(data)
+                            .mark_bar()
+                            .encode(
+                                x="Mirror",
+                                y=delay_label,
+                                color=alt.condition(
+                                    alt.datum[delay_label] > max_acceptable_delay,
+                                    alt.value("#ff2a00"),
+                                    alt.value("#00a9ff"),
+                                ),
+                            )
+                        )
+
+                        st.altair_chart(chart, use_container_width=True)
 
     except ConnectionError:
         return
