@@ -3,7 +3,7 @@ from data import get_mirror_info, normalize_times
 
 
 def main():
-    st.title("Arch Linux Mirrors")
+    st.title("Arch Linux Mirror Comparer")
 
     try:
         mirror_data = get_mirror_info()
