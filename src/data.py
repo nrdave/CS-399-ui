@@ -1,6 +1,8 @@
 import streamlit as st
 from requests import get
 from requests.exceptions import RequestException
+from datetime import datetime
+from dateutil import tz
 
 
 # Arch Linux mirror checks generally run around every 7 minutes
@@ -39,3 +41,31 @@ def get_mirror_info() -> list:
         raise ConnectionError
 
     return []
+
+
+def get_last_update(status: dict) -> str:
+    if status["last_check"]:
+        # Time zone conversion taken from
+        # https://github.com/wolfpaulus/weather_ui/blob/main/app/data.py
+        t = datetime.fromisoformat(status["last_check"])
+        t = t.replace(tzinfo=tz.tzutc()).astimezone(tz.tzlocal())
+        return t.strftime("%A, %B %d, %Y, %-I:%M:%S %p %Z")
+
+    return ""
+
+
+def normalize_delays(delays: list[float]) -> list[float]:
+    """
+    Scale a list of delays based on the maximum delay
+
+    delays should be a list of delay values (in seconds)
+    """
+    MINUTES = 60
+    HOURS = 60 * MINUTES
+    # Determine how to scale the delays based on the maximum delay
+    if (max(delays)) >= 5 * HOURS:  # 5 hours -> convert to hours
+        delays = [d / HOURS for d in delays]
+    elif (max(delays)) >= 5 * MINUTES:  # 5 minutes -> convert to minutes
+        delays = [d / MINUTES for d in delays]
+
+    return delays
