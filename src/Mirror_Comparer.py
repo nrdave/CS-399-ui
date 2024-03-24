@@ -93,6 +93,25 @@ def main():
 
                         st.altair_chart(chart, use_container_width=True)
 
+                    case "score":
+                        st.caption(
+                            (
+                                '"A very rough calculation for ranking '
+                                "mirrors. It is currently calculated as "
+                                "(hours delay + average duration + standard "
+                                "deviation) / completion percentage. Lower "
+                                'is better." - archlinux.org'
+                            )
+                        )
+
+                        data = {m["url"]: m[key] for m in selected_mirrors}
+
+                        st.bar_chart(data)
+                    case _:
+                        data = {m["url"]: m[key] for m in selected_mirrors}
+
+                        st.bar_chart(data)
+
     except ConnectionError:
         return
 
