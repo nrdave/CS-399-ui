@@ -1,4 +1,4 @@
-from data import get_last_update, normalize_delays
+from data import get_last_update, normalize_times
 import pytest
 
 
@@ -44,11 +44,13 @@ def normalized_hour_delays(hour_delays):
 
 
 # fmt: off
-def test_normalize_delays(
+def test_normalize_times(
     second_delays, normalized_second_delays,
     minute_delays, normalized_minute_delays,
     hour_delays, normalized_hour_delays
 ):  # fmt: on
-    assert normalize_delays(second_delays) == normalized_second_delays
-    assert normalize_delays(minute_delays) == normalized_minute_delays
-    assert normalize_delays(hour_delays) == normalized_hour_delays
+    assert normalize_times(second_delays) == (
+        normalized_second_delays, 'seconds')
+    assert normalize_times(minute_delays) == (
+        normalized_minute_delays, 'minutes')
+    assert normalize_times(hour_delays) == (normalized_hour_delays, 'hours')

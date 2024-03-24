@@ -56,7 +56,7 @@ def get_mirror_info() -> list:
     return []
 
 
-def normalize_delays(delays: list[float]) -> list[float]:
+def normalize_times(delays: list[float]) -> (list[float], str):
     """
     Scale a list of delays based on the maximum delay
 
@@ -64,10 +64,13 @@ def normalize_delays(delays: list[float]) -> list[float]:
     """
     MINUTES = 60
     HOURS = 60 * MINUTES
+    units = "seconds"
     # Determine how to scale the delays based on the maximum delay
     if (max(delays)) >= 5 * HOURS:  # 5 hours -> convert to hours
         delays = [d / HOURS for d in delays]
+        units = "hours"
     elif (max(delays)) >= 5 * MINUTES:  # 5 minutes -> convert to minutes
         delays = [d / MINUTES for d in delays]
+        units = "minutes"
 
-    return delays
+    return (delays, units)

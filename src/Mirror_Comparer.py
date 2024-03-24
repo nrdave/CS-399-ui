@@ -1,6 +1,6 @@
 import streamlit as st
 from requests import get
-from data import get_mirror_info
+from data import get_mirror_info, normalize_times
 
 
 def main():
