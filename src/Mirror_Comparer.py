@@ -40,6 +40,10 @@ def main():
         if selected_mirrors:
             for key in selected_keys:
                 st.subheader(key)
+
+                BAR_GOOD_COLOR = "#00a9ff"
+                BAR_BAD_COLOR = "#ff2a00"
+
                 match key:
                     case "delay":
                         (normalized_delays, units) = normalize_times(
@@ -86,8 +90,8 @@ def main():
                                 color=alt.condition(
                                     alt.datum[delay_label]
                                     > max_acceptable_delay,
-                                    alt.value("#ff2a00"),
-                                    alt.value("#00a9ff"),
+                                    alt.value(BAR_BAD_COLOR),
+                                    alt.value(BAR_GOOD_COLOR),
                                 ),
                             )
                         )
@@ -126,8 +130,8 @@ def main():
                                 y="Completion Percent",
                                 color=alt.condition(
                                     alt.datum["Completion Percent"] < 100,
-                                    alt.value("#ff2a00"),
-                                    alt.value("#00a9ff"),
+                                    alt.value(BAR_BAD_COLOR),
+                                    alt.value(BAR_GOOD_COLOR),
                                 ),
                             )
                         )
@@ -147,7 +151,7 @@ def main():
 
                         data = {m["url"]: m[key] for m in selected_mirrors}
 
-                        st.bar_chart(data)
+                        st.bar_chart(data, color=BAR_GOOD_COLOR)
 
                     case "duration_avg":
                         st.caption(
@@ -163,7 +167,7 @@ def main():
 
                         data = {m["url"]: m[key] for m in selected_mirrors}
 
-                        st.bar_chart(data)
+                        st.bar_chart(data, color=BAR_GOOD_COLOR)
 
                     case "duration_stddev":
                         st.caption(
@@ -179,11 +183,11 @@ def main():
 
                         data = {m["url"]: m[key] for m in selected_mirrors}
 
-                        st.bar_chart(data)
+                        st.bar_chart(data, color=BAR_GOOD_COLOR)
                     case _:
                         data = {m["url"]: m[key] for m in selected_mirrors}
 
-                        st.bar_chart(data)
+                        st.bar_chart(data, color=BAR_GOOD_COLOR)
 
     except ConnectionError:
         return
