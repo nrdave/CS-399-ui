@@ -33,11 +33,24 @@ def main():
             format_func=lambda m: m["url"],
         )
 
-        for key in selected_keys:
-            data = {m["url"]: m[key] for m in selected_mirrors}
+        if selected_mirrors:
+            for key in selected_keys:
+                st.subheader(key)
+                if key == "delay":
+                    (normalized_delays, units) = normalize_times(
+                        [m["delay"] for m in selected_mirrors]
+                    )
+                    # fmt: off
+                    data = {
+                        m["url"]: n for m, n in
+                        zip(selected_mirrors, normalized_delays)
+                    }
+                    # fmt: on
+                    st.text("Units: " + units)
+                else:
+                    data = {m["url"]: m[key] for m in selected_mirrors}
 
-            st.subheader(key)
-            st.bar_chart(data)
+                st.bar_chart(data)
 
     except ConnectionError:
         return
