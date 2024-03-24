@@ -148,6 +148,38 @@ def main():
                         data = {m["url"]: m[key] for m in selected_mirrors}
 
                         st.bar_chart(data)
+
+                    case "duration_avg":
+                        st.caption(
+                            (
+                                '"The average (mean) time it took to connect '
+                                "and retrieve the lastsync file from the "
+                                "given URL. Note that this connection "
+                                "time is from the location of the Arch "
+                                "server; your geography may product "
+                                'different results." - archlinux.org.'
+                            )
+                        )
+
+                        data = {m["url"]: m[key] for m in selected_mirrors}
+
+                        st.bar_chart(data)
+
+                    case "duration_stddev":
+                        st.caption(
+                            (
+                                '"The standard deviation of the time it took '
+                                "to connect and retrieve the lastsync file "
+                                "from the given URL. Note that this "
+                                "connection time is from the location of "
+                                "the Arch server; your geography may product "
+                                'different results." - archlinux.org.'
+                            )
+                        )
+
+                        data = {m["url"]: m[key] for m in selected_mirrors}
+
+                        st.bar_chart(data)
                     case _:
                         data = {m["url"]: m[key] for m in selected_mirrors}
 
